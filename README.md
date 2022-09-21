@@ -36,22 +36,6 @@ df <- data.frame(humanos_variant, humanos_size)
 
 ggplot(df, aes(humanos_variant, humanos_size)) + geom_point(size=3) + ggtitle("Diferencia de tamaño entr 
 
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-07.jpg?height=2260&width=1531&top_left_y=250&top_left_x=234)
-
-
-
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-08.jpg?height=2256&width=1528&top_left_y=249&top_left_x=234)
-
-
-
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-09.jpg?height=2253&width=1528&top_left_y=250&top_left_x=237)
-
-
-
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-10.jpg?height=2212&width=1586&top_left_y=244&top_left_x=234)
-
-
-
 \section{SARS-CoV-2 Top 20 Paises}
 
 ![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-15.jpg?height=672&width=1114&top_left_y=450&top_left_x=489)
@@ -95,16 +79,6 @@ Coronavirus Humanos
 ![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-21.jpg?height=675&width=1049&top_left_y=446&top_left_x=489)
 
 ggtree(humanos_plot, branch.length='none', layout='circular') + geom_tiplab()+labs(caption="Coronavirus 
-
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-23.jpg?height=2213&width=1243&top_left_y=258&top_left_x=233)
-
-
-
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-24.jpg?height=2211&width=1445&top_left_y=281&top_left_x=233)
-
-
-
-![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-25.jpg?height=1126&width=1441&top_left_y=282&top_left_x=237)
 
 Porcentaje de nucleotidos de variantes de Covid-19 en los paises con mas
 
