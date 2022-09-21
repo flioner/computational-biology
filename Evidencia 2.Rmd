@@ -1,0 +1,555 @@
+---
+title: "Evidencia 2"
+output: pdf_document
+---
+## Edgar Fabian Lioner Rocha
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r , echo=FALSE,warning=FALSE,message=FALSE,error=FALSE, results='hide'}
+library(Biostrings)
+library(seqinr)
+library(adegenet)
+library(ape)
+library(ggtree)
+library(DECIPHER)
+library(viridis)
+library(ggplot2)
+```
+
+## Variantes
+20 Paises con mas casos:
+
+01.- MN908947 - SARS-CoV-2 (Original / Baseline)
+02.- MN985325 - Estados Unidos
+03.- OK356410 - India
+04.- MW962307 - Brasil
+05.- OU791703 - UK
+06.- MW332225 - Rusia
+07.- MT787745 - Turquia
+08.- MW580244 - Francia
+09.- MT994881 - Iran
+10.- MW633892 - Argentina
+11.- MT233523 - España
+12.- MT470219 - Colombia
+13.- MZ362439 - Italia
+14.- MZ317675 - Alemania
+15.- MW273857 - Polonia
+16.- MW981442 - Sudafrica
+17.- MZ068154 - Filipinas
+18.- MZ275298 - Peru
+19.- MW947280 - Holanda
+20.- MW672153 - Chile
+
+Por continentes:
+
+Asia - MN908947 - SARS-CoV-2 (Original / Baseline)
+America - MN985325
+Africa - LR963367
+Europa -  
+Oceanía - MT007544 
+
+Zoonosis - Covid-19 v.s coronavirus animales:
+
+01.- MN908947 - Humano
+02.- MT365033 - Tigre
+03.- MW626387 - Vison Americano
+04.- MZ099821 - Huron
+05.- MW562261 - Vison Europeo
+06.- MT835139 - Hamster
+07.- MZ317675 - Gato
+08.- MT628700 - Feliformia
+09.- MZ914594 - Lobo
+10.- MZ413341 - Leon
+11.- AY572034 - Viverridae (SARS)
+12.- KY417143 - Murcielago (SARS)
+13.- KY417145 - Murcielago 2 (SARS)
+14.- AY613950 - Civet (SARS)
+15.- AY515512 - Civet 2 (SARS)
+16.- HQ890531 - Raton (SARS)
+17.- GU553365 - Grivet(Monkey)(SARS)
+18.- MT270814 - Perro (SARS)
+19.- KY417142 - Murcielago 3 (SARS)
+20.- KU973692 - Murcielago 4 (SARS)
+
+Covid-19 v.s Coronavirus parecidos:
+
+01.- MN908947 - SARS-CoV-2 Wuhan
+02.- MT233519 - SARS-Cov-2 Valencia
+03.- MT233526 - SARS-Cov-2 USA-WA1
+04.- NC_006577 - HKU1
+05.- HM034837 - HKU1 Caen 1
+06.- KF530089 - OC43
+07.- JQ765563 - NL63
+08.- NC_004718 - SARS Tor 2
+09.- FJ882931 - SARS P3pp12
+10.- FJ882940 - SARS P3pp37
+11.- AY502929 - SARS TW6
+12.- AY502930 - SARS TW7
+13.- AY304495 - SARS GZ50
+14.- NC_019843 - MERS HCoV-EMC
+15.- MT387202 - MERS KNIH_002
+16.- KF186567 - MERS Al-Hasa_1
+17.- KF186564 - MERS Al-Hasa_4
+18.- KF600627 - MERS Al-Hasa 12
+19.- KF958702 - MERS-CoV-Jeddah
+20.- KF961222 - MERS Qatar 4
+
+```{r}
+#Definimos el vector con los top 20 virus que vamos a descargar de GenBank
+
+virus <- c(  "MN908947", "MN985325","OK356410","MW962307","OU791703","MT787745", "MW332225","MW580244","MT994881","MW633892","MT233523","MT470219","MZ362439","MZ317675","MW273857","MW981442","MZ068154","MZ275298","MW947280","MW672153")
+
+#Definimos el vector con los virus de cada continente
+
+continentes <- c("MN908947","MN985325","LR963367","MW947280","MT007544")
+
+
+#Definimos el vector con los 20 virus de diferentes animales
+
+zoonosis <- c("MN908947","MT365033","MW626387","MZ099821","MW562261","MT835139","MZ317675","MT628700","MZ914594","MZ413341","AY572034","KY417143","KY417145","AY613950","AY515512","HQ890531","GU553365","MT270814","KY417142","KU973692")
+
+
+#Definimos el vector con los 20 virus del genero de betacoronavirus parecidos al SARS-CoV-2
+
+virus_humanos <-c("MN908947","MT233519","MT233526","NC_006577","HM034837","KF530089","JQ765563","NC_004718","FJ882931","FJ882940","AY502929","AY502930","AY304495","NC_019843","MT387202","KF186567","KF186564","KF600627","KF958702","KF961222")
+```
+
+```{r}
+#Leemos de genbank y lo guardamos en variables
+virus_secuencias <- read.GenBank(virus)
+#virus_secuencias
+
+continentes_secuencias <- read.GenBank(continentes)
+#continentes_secuencias
+
+zoonosis_secuencias <- read.GenBank(zoonosis)
+#zoonosis_secuencias
+
+humanos_secuencias <- read.GenBank(virus_humanos)
+#humanos_secuencias
+```
+
+```{r}
+#Le damos el nombre correcto a los top 20 virus y lo guardamos como fasta
+
+names(virus_secuencias) <- c("Wuhan (Original)","Estados Unidos","India","Brasil","UK","Rusia","Turquia","Francia","Iran","Argentina","España","Colombia","Italia","Alemania","Polonia","Sudafrica","Filipinas","Peru","Holanda","Chile")
+
+write.dna(virus_secuencias,  
+          file ="virus_seqs.fasta", format = "fasta", append =
+FALSE, nbcol = 9, colsep = " ", colw = 10)
+
+
+#Le damos el nombre correcto a los virus de cada continente y lo guardamos como fasta
+
+names(continentes_secuencias) <- c("Asia", "America","Africa","Europa","Oceania")
+
+write.dna(continentes_secuencias,  
+          file ="continentes_seqs.fasta", format = "fasta", append =
+FALSE, nbcol = 9, colsep = " ", colw = 10)
+
+
+#Le damos el nombre correcto a los 20 virus de animales y lo guardamos como fasta
+
+names(zoonosis_secuencias) <- c("Humano (SARS-Cov-2)", "Tigre (SARS-Cov-2)","Vison Americano (SARS-Cov-2)","Huron (SARS-Cov-2)","Vison Europeo (SARS-Cov-2)","Hamster (SARS-Cov-2)","Gato (SARS-Cov-2)","Feliformia (SARS-Cov-2)","Lobo (SARS-Cov-2)","Leon (SARS-Cov-2)","Viverridae (SARS)","Murcielago (SARS)","Murcielago 2 (SARS)","Civet (SARS)","Civet 2 (SARS)","Raton (SARS)","Grivet(Monkey)(SARS)","Perro (SARS)","Murcielago 3 (SARS)","Murcielago 4 (SARS)")
+
+write.dna(zoonosis_secuencias,  
+          file ="zoonosis_seqs.fasta", format = "fasta", append =
+FALSE, nbcol = 9, colsep = " ", colw = 10)
+
+
+#Le damos el nombre correcto a los 20 virus del genero betacoronavirus parecidos al SARS-CoV-2 y lo guardamos como fasta
+
+names(humanos_secuencias) <- c("SARS-CoV-2 Wuhan","SARS-Cov-2 Valencia", "SARS-CoV-USA-WA1","SARS-Cov-2 USA-WA1","HKU1","HKU1-Caen 1","OC43","NL63","SARS-Tor-2","SARS-P3pp12","SARS-P3pp37","SARS-TW6","SARS-TW7","SARS-GZ50","MERS-HCoV-EMC","MERS-Al-Hasa_1","MERS-Al-Hasa_4","MERS-Al-Hasa_12","MERS-CoV-Jeddah","MERS-Qatar-4")
+
+write.dna(humanos_secuencias,  
+          file ="humanos_seqs.fasta", format = "fasta", append =
+FALSE, nbcol = 9, colsep = " ", colw = 10)
+```
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
+#Paso 1 de 5 para alinear, abrimos el fasta y lo guardamos en una variable para manipularlo despues
+
+virus_seq_no_alineadas <- readDNAStringSet("virus_seqs.fasta", format = "fasta")
+#virus_seq_no_alineadas
+
+continentes_seq_no_alineadas <- readDNAStringSet("continentes_seqs.fasta", format = "fasta")
+#continentes_seq_no_alineadas
+
+zoonosis_seq_no_alineadas <- readDNAStringSet("zoonosis_seqs.fasta", format = "fasta")
+#zoonosis_seq_no_alineadas
+
+humanos_seq_no_alineadas <- readDNAStringSet("humanos_seqs.fasta", format = "fasta")
+#humanos_seq_no_alineadas
+```
+
+```{r}
+#Graficas explicando la longitud / tamaño de todos los diferentes coronavirus
+
+
+#Grafica del tamaño de las variantes de los top 20 paises
+
+virus_variant <- names(virus_seq_no_alineadas)
+virus_size <- width(virus_seq_no_alineadas)
+
+df <- data.frame(virus_variant, virus_size)
+ggplot(df,aes(virus_variant, virus_size)) + geom_point(size=3) + ggtitle("Diferencia de tamaño entre las variantes de los 20 paises con mas casos") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+#Grafica del tamaño de una variante de cada continente
+
+continentes_variant <- names(continentes_seq_no_alineadas)
+continentes_size <- width(continentes_seq_no_alineadas)
+
+df <- data.frame(continentes_variant, continentes_size)
+ggplot(df,aes(continentes_variant, continentes_size)) + geom_point(size=4) + ggtitle("Diferencia de tamaño entre las variantes de diferentes continentes")
+
+
+#Grafica del tamaño de 20 coronavirus en animales
+
+zoonosis_variant <- names(zoonosis_seq_no_alineadas)
+zoonosis_size <- width(zoonosis_seq_no_alineadas)
+
+df <- data.frame(zoonosis_variant, zoonosis_size)
+ggplot(df,aes(zoonosis_variant, zoonosis_size)) + geom_point(size=3) + ggtitle("Diferencia de tamaño entre las variantes de diferentes especies animales") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+#Grafica del tamaño de 20 virus de la familia betacoronavirus en humanos
+
+humanos_variant <- names(humanos_seq_no_alineadas)
+humanos_size <- width(humanos_seq_no_alineadas)
+
+df <- data.frame(humanos_variant, humanos_size)
+ggplot(df,aes(humanos_variant, humanos_size)) + geom_point(size=3) + ggtitle("Diferencia de tamaño entre betacoronavirus  similares")+ theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+```
+
+```{r}
+#Paso 2 de 5 para alinear las secuencias
+
+virus_seq_no_alineadas <- OrientNucleotides(virus_seq_no_alineadas)
+continentes_seq_no_alineadas <- OrientNucleotides(continentes_seq_no_alineadas)
+zoonosis_seq_no_alineadas <- OrientNucleotides(zoonosis_seq_no_alineadas)
+humanos_seq_no_alineadas <- OrientNucleotides(humanos_seq_no_alineadas)
+```
+
+```{r}
+#Paso 3 de 5 para alinear las secuencias - se alinean como tal
+
+virus_seq_alineadas <- AlignSeqs(virus_seq_no_alineadas)
+continentes_seq_alineadas <- AlignSeqs(continentes_seq_no_alineadas)
+zoonosis_seq_alineadas <- AlignSeqs(zoonosis_seq_no_alineadas)
+humanos_seq_alineadas <- AlignSeqs(humanos_seq_no_alineadas)
+``` 
+
+```{r}
+#Paso 4 de 5 - lo pasamos a fasta
+writeXStringSet(virus_seq_alineadas, file = "virus1_align_seq.fasta")
+writeXStringSet(continentes_seq_alineadas, file = "continentes_align_seq.fasta")
+writeXStringSet(zoonosis_seq_alineadas, file = "zoonosis_align_seq.fasta")
+writeXStringSet(humanos_seq_alineadas, file = "humanos_align_seq.fasta")
+
+```
+
+```{r}
+#Paso 5 de 5 - y de fasta lo regresamos a una variable utilizable 
+
+virus_aligned <- read.alignment("virus1_align_seq.fasta", format = "fasta") 
+continentes_aligned <- read.alignment("continentes_align_seq.fasta", format = "fasta") 
+zoonosis_aligned <- read.alignment("zoonosis_align_seq.fasta", format = "fasta") 
+humanos_aligned <- read.alignment("humanos_align_seq.fasta", format = "fasta") 
+
+```
+
+```{r}
+#Hacemos matrices de distancia/similitud, no lo pide la tarea pero nos pasó el codigo
+
+
+matriz_virus_distancias <- dist.alignment(virus_aligned, matrix = "similarity")
+
+matriz_continentes_distancias <- dist.alignment(continentes_aligned, matrix = "similarity")
+
+matriz_zoonosis_distancias <- dist.alignment(zoonosis_aligned, matrix = "similarity")
+
+matriz_humanos_distancias <- dist.alignment(humanos_aligned, matrix = "similarity")
+```
+
+```{r}
+# Esto no lo pide la tarea pero nos pasó el codigo en la clase pasada entonces tambien lo incluyo como extra
+
+temp <- as.data.frame(as.matrix(matriz_virus_distancias))
+table.paint(temp, cleg=0, clabel.row=.5, clabel.col=.5) + scale_color_viridis()
+
+temp2 <- as.data.frame(as.matrix(matriz_continentes_distancias))
+table.paint(temp2, cleg=0, clabel.row=.5, clabel.col=.5) + scale_color_viridis()
+
+temp3 <- as.data.frame(as.matrix(matriz_zoonosis_distancias))
+table.paint(temp3, cleg=0, clabel.row=.5, clabel.col=.5) + scale_color_viridis()
+
+temp4 <- as.data.frame(as.matrix(matriz_humanos_distancias))
+table.paint(temp4, cleg=0, clabel.row=.5, clabel.col=.5) + scale_color_viridis()
+```
+
+```{r}
+#Usamos la matriz de distancias para ir calculando el arbol
+virus_str_filogenetico <- nj(matriz_virus_distancias)
+class(virus_str_filogenetico)
+
+continentes_str_filogenetico <- nj(matriz_continentes_distancias)
+class(continentes_str_filogenetico)
+
+zoonosis_str_filogenetico <- nj(matriz_zoonosis_distancias)
+class(zoonosis_str_filogenetico)
+
+humanos_str_filogenetico <- nj(matriz_humanos_distancias)
+class(humanos_str_filogenetico)
+```
+
+```{r}
+
+#Arbol de las variantes de los top 20 paises
+virus_plot <- ladderize(virus_str_filogenetico)
+plot(virus_plot)
+title("SARS-CoV-2 Top 20 Paises")
+ggtree(virus_plot, branch.length='none', layout='circular')  + geom_tiplab()+labs(caption="Coronavirus de 20 paises")
+
+#Arbol de las variantes de cada continente
+continentes_plot <- ladderize(continentes_str_filogenetico)
+plot(continentes_plot)
+title("SARS-CoV-2 Continentales")
+ggtree(continentes_plot, branch.length='none', layout='circular')  + geom_tiplab()+labs(caption="Coronavirus de cada continente")
+
+#Arbol de las variantes en animales
+zoonosis_plot <- ladderize(zoonosis_str_filogenetico)
+plot(zoonosis_plot)
+title("Zoonosis")
+ggtree(zoonosis_plot, branch.length='none', layout='circular')  + geom_tiplab()+labs(title="Coronavirus en animales")
+
+#Arbol de betacoronavirus parecidos
+humanos_plot <- ladderize(humanos_str_filogenetico)
+plot(humanos_plot)
+title("Coronavirus Humanos")
+ggtree(humanos_plot, branch.length='none', layout='circular') + geom_tiplab()+labs(caption="Coronavirus en humanos")
+
+
+```
+```{r}
+## Data para las variantes de los 20 paises con mas casos
+
+top_20_virus <- c("")
+porcentaje <- c()
+for (i in 1:20){
+  temp_seq <- (virus_seq_no_alineadas[i])
+  temp_total = 0
+  
+  temp_nuc <- c()
+  temp_nuc[1] = names(virus_seq_no_alineadas[i])
+  
+  if(i == 1)
+  {
+    top_20_virus[1] = names(virus_seq_no_alineadas[i])
+    top_20_virus[2] = names(virus_seq_no_alineadas[i])
+    top_20_virus[3] = names(virus_seq_no_alineadas[i])
+    top_20_virus[4] = names(virus_seq_no_alineadas[i])
+  }
+  else
+  {
+    top_20_virus[1+i*4] = names(virus_seq_no_alineadas[i])
+    top_20_virus[2+i*4] = names(virus_seq_no_alineadas[i])
+    top_20_virus[3+i*4] = names(virus_seq_no_alineadas[i])
+    top_20_virus[4+i*4] = names(virus_seq_no_alineadas[i])
+  }
+  
+  #ACGT
+  for (j in 1:4)
+  {
+    temp_nuc[j+1] = alphabetFrequency(temp_seq)[j]
+    temp_total = temp_total +  alphabetFrequency(temp_seq)[j]
+    
+    if(j == 4){
+      temp_nuc[6] = temp_total
+
+      if(i == 1)
+      {
+        porcentaje[1] = as.integer(temp_nuc[2])*100/temp_total
+        porcentaje[2] = as.integer(temp_nuc[3])*100/temp_total
+        porcentaje[3] = as.integer(temp_nuc[4])*100/temp_total
+        porcentaje[4] = as.integer(temp_nuc[5])*100/temp_total
+      }
+      else
+      {
+        porcentaje[1+i*4] = as.integer(temp_nuc[2])*100/temp_total
+        porcentaje[2+i*4] = as.integer(temp_nuc[3])*100/temp_total
+        porcentaje[3+i*4] = as.integer(temp_nuc[4])*100/temp_total
+        porcentaje[4+i*4] = as.integer(temp_nuc[5])*100/temp_total
+      }
+  
+    }
+  }
+}
+
+## Data para la grafica de zoonosis
+
+variantes_animales <- c("")
+porcentaje_zoo <- c()
+for (i in 1:20){
+  temp_seq_zoo <- (zoonosis_seq_no_alineadas[i])
+  temp_total_zoo = 0
+  
+  temp_nuc_zoo <- c()
+  temp_nuc_zoo[1] = names(zoonosis_seq_no_alineadas[i])
+  
+  if(i == 1)
+  {
+    variantes_animales[1] = names(zoonosis_seq_no_alineadas[i])
+    variantes_animales[2] = names(zoonosis_seq_no_alineadas[i])
+    variantes_animales[3] = names(zoonosis_seq_no_alineadas[i])
+    variantes_animales[4] = names(zoonosis_seq_no_alineadas[i])
+  }
+  else
+  {
+    variantes_animales[1+i*4] = names(zoonosis_seq_no_alineadas[i])
+    variantes_animales[2+i*4] = names(zoonosis_seq_no_alineadas[i])
+    variantes_animales[3+i*4] = names(zoonosis_seq_no_alineadas[i])
+    variantes_animales[4+i*4] = names(zoonosis_seq_no_alineadas[i])
+  }
+  
+  #ACGT
+  for (j in 1:4)
+  {
+    temp_nuc_zoo[j+1] = alphabetFrequency(temp_seq_zoo)[j]
+    temp_total_zoo = temp_total_zoo +  alphabetFrequency(temp_seq_zoo)[j]
+    
+    if(j == 4){
+      temp_nuc_zoo[6] = temp_total_zoo
+
+      if(i == 1)
+      {
+        porcentaje_zoo[1] = as.integer(temp_nuc_zoo[2])*100/temp_total_zoo
+        porcentaje_zoo[2] = as.integer(temp_nuc_zoo[3])*100/temp_total_zoo
+        porcentaje_zoo[3] = as.integer(temp_nuc_zoo[4])*100/temp_total_zoo
+        porcentaje_zoo[4] = as.integer(temp_nuc_zoo[5])*100/temp_total_zoo
+      }
+      else
+      {
+        porcentaje_zoo[1+i*4] = as.integer(temp_nuc_zoo[2])*100/temp_total_zoo
+        porcentaje_zoo[2+i*4] = as.integer(temp_nuc_zoo[3])*100/temp_total_zoo
+        porcentaje_zoo[3+i*4] = as.integer(temp_nuc_zoo[4])*100/temp_total_zoo
+        porcentaje_zoo[4+i*4] = as.integer(temp_nuc_zoo[5])*100/temp_total_zoo
+      }
+  
+    }
+  }
+}
+
+## Data para la grafica de coronavirus parecidos en humanos
+
+variantes_humanos <- c("")
+porcentaje_hum <- c()
+for (i in 1:20){
+  temp_seq_hum <- (humanos_seq_no_alineadas[i])
+  temp_total_hum = 0
+  
+  temp_nuc_hum <- c()
+  temp_nuc_hum[1] = names(humanos_seq_no_alineadas[i])
+  
+  if(i == 1)
+  {
+    variantes_humanos[1] = names(humanos_seq_no_alineadas[i])
+    variantes_humanos[2] = names(humanos_seq_no_alineadas[i])
+    variantes_humanos[3] = names(humanos_seq_no_alineadas[i])
+    variantes_humanos[4] = names(humanos_seq_no_alineadas[i])
+  }
+  else
+  {
+    variantes_humanos[1+i*4] = names(humanos_seq_no_alineadas[i])
+    variantes_humanos[2+i*4] = names(humanos_seq_no_alineadas[i])
+    variantes_humanos[3+i*4] = names(humanos_seq_no_alineadas[i])
+    variantes_humanos[4+i*4] = names(humanos_seq_no_alineadas[i])
+  }
+  
+  #ACGT
+  for (j in 1:4)
+  {
+    temp_nuc_hum[j+1] = alphabetFrequency(temp_seq_hum)[j]
+    temp_total_hum = temp_total_hum +  alphabetFrequency(temp_seq_hum)[j]
+    
+    if(j == 4){
+      temp_nuc_hum[6] = temp_total_hum
+
+      if(i == 1)
+      {
+        porcentaje_hum[1] = as.integer(temp_nuc_hum[2])*100/temp_total_hum
+        porcentaje_hum[2] = as.integer(temp_nuc_hum[3])*100/temp_total_hum
+        porcentaje_hum[3] = as.integer(temp_nuc_hum[4])*100/temp_total_hum
+        porcentaje_hum[4] = as.integer(temp_nuc_hum[5])*100/temp_total_hum
+      }
+      else
+      {
+        porcentaje_hum[1+i*4] = as.integer(temp_nuc_hum[2])*100/temp_total_hum
+        porcentaje_hum[2+i*4] = as.integer(temp_nuc_hum[3])*100/temp_total_hum
+        porcentaje_hum[3+i*4] = as.integer(temp_nuc_hum[4])*100/temp_total_hum
+        porcentaje_hum[4+i*4] = as.integer(temp_nuc_hum[5])*100/temp_total_hum
+      }
+  
+    }
+  }
+}
+```
+
+```{r, echo=FALSE,warning=FALSE,message=FALSE,error=FALSE, results='hide',fig.keep='all'}
+nucleotidos <- rep(c("A","C","G","T"),21)
+
+# Hacemos los data frames con las variables que establecimos arriba
+
+data <- data.frame(top_20_virus,nucleotidos,porcentaje)
+
+data_zoo <- data.frame(variantes_animales,nucleotidos,porcentaje_zoo)
+
+data_humanos <- data.frame(variantes_humanos,nucleotidos,porcentaje_hum)
+
+#Graficamos los top 20 paises
+
+ggplot(data, aes(fill=nucleotidos, y=porcentaje, x=top_20_virus)) + 
+    geom_bar(position="dodge", stat="identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ 
+    labs(title="Porcentaje de nucleotidos de variantes de Covid-19 en los paises con mas casos", caption="Podemos observar las variantes de los 20 paises con mas casos\n y a pesar de que el virus muta entre mas contagios hay, la diferencia en el  \n porcentaje de nucleotidos es minima, a duras penas se alcanza a notar")
+
+#Graficamos zoonosis
+
+ggplot(data_zoo, aes(fill=nucleotidos, y=porcentaje_zoo, x=variantes_animales)) + 
+    geom_bar(position="dodge", stat="identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ 
+    labs(title="Porcentaje de nucleotidos de variantes de coronavirus en animales", caption="Aqui podemos ver como hay una mayor variación, no es tanta pero ya se puede empezar a observar \n la diferencia a comparación de las variantes entre paises, al moverse entre paises el virus muta un poco,\n pero necesita mutar todavia mas para poder transmitirse de una especie de animal a otra y por eso \n empezamos a ver una diferencia mas significativa entre las variantes de diferentes animales")
+
+#Graficamos coronavirus parecidos en humanos
+
+ggplot(data_humanos, aes(fill=nucleotidos, y=porcentaje_hum, x=variantes_humanos)) + 
+    geom_bar(position="dodge", stat="identity") + 
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ 
+    labs(title="Porcentaje de nucleotidos en diferentes virus del genero betacoronavirus", caption= "Podemos observar que en cuando analizamos los diferentes betacoronavirus hay una\n gran variación en cuestion del porcentaje de nucleotidos de cada virus, como aqui sí son virus\n diferentes y no solo variantes tiene mas sentido que la diferencia sea mayor, por lo que podemos \n concluir que las variantes entre paises tienen menor variación, las variantes entre especies de animales\n tienen mas variación, pero los virus cuyos genomas son tan diferentes que no se clasifican como \nla misma especie  son los que muestran la mayor variacion")
+
+```
+
+#Conclusión: 
+Como exploré en el video, los virus más parecidos al Covid-19, es decir los que se
+podría decir que son su familia cercana son principalmente el SARS y el MERS de acuerdo a PUBMED de NCBI. 
+Este tipo de coronavirus son bastante similares al SARS-CoV-2, los 3 a pesar de tener tasas de mortalidad 
+y contagio diferentes,están presentes en humanos y pertenecen al generi de los betacoronavirus. 
+Se cree que el origen del Covid-19 es del pangolín, sin embargo hay una infinidad de variantes entre 
+especies de mamíferos, hay coronavirus presentes en murciélagos, civets, y numerosos otros animales.
+
+Y podemos observar durante este archivo RMD las similitudes y diferencias entre los virus de la familia 
+betacoronavirus asi como directamente entre variantes del mismo virus de un país a otro y de las variantes
+entre especies de mamiferos. 
+
+Como mencione anteriormente y en el video, los murcielagos son de los principales portadores
+de los coronavirus. En cuestión de la composición de todos estos virus, los que son distintos pero del 
+mismo genero, es decir el SARS, SARS-CoV-2y el MERS presentan una variación significante en su 
+composición de nucleotidos, mientras que las variantes del mismo SARS-CoV-2 entre especies de mamiferos
+presentan una variación de composición de nucleotidos reducida y finalmente las variantes del mismo virus
+pero entre países diferentes son practicamente iguales, si hay variación pero esta es minima en 
+comparación de los otros dos casos de estudio
+
