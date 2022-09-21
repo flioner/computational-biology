@@ -1,11 +1,4 @@
-\title{
-Evidencia 2
-}
-
-\section{Edgar Fabian Lioner Rocha}
-
-
-\section{Variantes}
+Edgar Fabian Lioner Rocha
 
 20 Paises con mas casos:
 
@@ -81,7 +74,7 @@ Coronavirus de cada continente
 
 
 
-\section{Zoonosis}
+Zoonosis
 
 ![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-19.jpg?height=674&width=1049&top_left_y=449&top_left_x=489)
 
@@ -95,9 +88,9 @@ humanos_plot $<-$ ladderize(humanos_str_filogenetico)
 
 plot (humanos_plot)
 
-title("Coronavirus Humanos") 
+"Coronavirus Humanos"
 
-\section{Coronavirus Humanos}
+Coronavirus Humanos
 
 ![](https://cdn.mathpix.com/cropped/2022_09_21_4a9b8950efea580b6a44g-21.jpg?height=675&width=1049&top_left_y=446&top_left_x=489)
 
